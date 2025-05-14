@@ -1,0 +1,26 @@
+spring:
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/my_database?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh
+    username: root
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        transaction:
+          jta:
+            platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
+  security:
+    user:
+      name: admin
+      password: 12345
+logging:
+  config: classpath:log4j2-${spring.profiles.active:local}.xml
