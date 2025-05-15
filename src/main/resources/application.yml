@@ -1,4 +1,8 @@
+server:
+  port: ${SERVER_PORT:8080}
 spring:
+  application:
+    name: template-application
   jackson:
     time-zone: Asia/Ho_Chi_Minh
   datasource:

@@ -10,22 +10,9 @@
 	</parent>
 	<groupId>io.github.leducanh123456</groupId>
 	<artifactId>aps-template-mono</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>aps-template-mono</name>
 	<description>Demo project for Spring Boot</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
@@ -150,7 +137,48 @@
 			<version>1.6.3</version>
 		</dependency>
 	</dependencies>
-
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<active.profile>local</active.profile>
+			</properties>
+			<!--            <activation>-->
+			<!--                <activeByDefault>true</activeByDefault>-->
+			<!--            </activation>-->
+			<!--            <repositories>-->
+			<!--                <repository>-->
+			<!--                    <id>nexus-mware-local</id>-->
+			<!--                    <url>http://localhost:19803/repository/maven-public/</url>-->
+			<!--                </repository>-->
+			<!--            </repositories>-->
+			<!--            <distributionManagement>-->
+			<!--                <repository>-->
+			<!--                    <id>nexus-mware-local-release</id>-->
+			<!--                    <url>http://localhost:19803/repository/maven-releases/</url>-->
+			<!--                </repository>-->
+			<!--                <snapshotRepository>-->
+			<!--                    <id>nexus-mware-local-snapshot</id>-->
+			<!--                    <url>http://localhost:19803/repository/maven-snapshots/</url>-->
+			<!--                </snapshotRepository>-->
+			<!--            </distributionManagement>-->
+		</profile>
+		<profile>
+			<id>staging</id>
+			<properties>
+				<active.profile>staging</active.profile>
+			</properties>
+		</profile>
+		<profile>
+			<id>uat</id>
+			<properties>
+				<active.profile>uat</active.profile>
+			</properties>
+		</profile>
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -161,6 +189,11 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>1.6.3</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

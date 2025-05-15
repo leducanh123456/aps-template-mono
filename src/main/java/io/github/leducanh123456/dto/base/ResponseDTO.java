@@ -9,9 +9,8 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseDTO<T> {
+public class ResponseDTO {
     private String statusCode;
     private String message;
     private UUID refNo;
-    private T data;
 }
