@@ -1,0 +1,6 @@
+projectKey=template-mono
+serverUrl=https://sonarqube.aps-site.online
+serverVersion=25.1.0.102122
+dashboardUrl=https://sonarqube.aps-site.online/dashboard?id=template-mono
+ceTaskId=a1608fd9-5cba-4649-b8eb-42443573f2b9
+ceTaskUrl=https://sonarqube.aps-site.online/api/ce/task?id=a1608fd9-5cba-4649-b8eb-42443573f2b9

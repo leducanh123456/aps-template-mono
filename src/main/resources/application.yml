@@ -26,5 +26,10 @@ spring:
     user:
       name: admin
       password: 12345
+  web:
+    locale: vi
+    locale-resolver: fixed
+  messages:
+    encoding: UTF-8
 logging:
   config: classpath:log4j2-${spring.profiles.active:local}.xml

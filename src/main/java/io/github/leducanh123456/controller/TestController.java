@@ -7,6 +7,7 @@ import io.github.leducanh123456.service.TestService;
 import io.github.leducanh123456.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class TestController {
     private final TestService testService;
 
     @PostMapping
-    public ResponseEntity<ResponseDataDTO<TestDTO>> createUser(@RequestBody TestDTO testDTO) {
+    public ResponseEntity<ResponseDataDTO<TestDTO>> createUser( @Validated @RequestBody TestDTO testDTO) {
         return ResponseEntity.ok(ResponseUtil.ok(testService.createTest(testDTO)));
     }
 

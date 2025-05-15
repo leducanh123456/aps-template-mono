@@ -1,6 +1,7 @@
 package io.github.leducanh123456.config.exception;
 
 import io.github.leducanh123456.constant.ResponseConstant;
+import io.github.leducanh123456.dto.base.ErrorCodeValidate;
 import io.github.leducanh123456.dto.base.ErrorResponseDTO;
 import io.github.leducanh123456.dto.base.ErrorResponseDataDTO;
 import io.github.leducanh123456.util.SecurityUtil;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,8 +26,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handeException(Exception e, WebRequest request) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
-        errorResponseDTO.setStatusCode(ResponseConstant.ResponseCode.INTERNAL_ERROR);
-        errorResponseDTO.setMessage(e.getMessage());
+        errorResponseDTO.setErrorCode(ResponseConstant.ResponseCode.INTERNAL_ERROR);
+        errorResponseDTO.setErrorMessage(e.getMessage());
         errorResponseDTO.setErrorTime(LocalDateTime.now());
         errorResponseDTO.setApiPath(request.getDescription(false));
         errorResponseDTO.setRefNo(UUID.fromString(Objects.requireNonNull(SecurityUtil.getRefNo())));
@@ -34,16 +36,38 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        Map<String, String> errors = new HashMap<>();
+        Map<String, ErrorCodeValidate> errors = new HashMap<>();
         List<ObjectError> validateErrors = ex.getBindingResult().getAllErrors();
         validateErrors.forEach(error -> {
-            String fileName = ((FieldError) error).getField();
+            String fieldName = (error instanceof FieldError) ? ((FieldError) error).getField() : error.getObjectName();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fileName, errorMessage);
+            ErrorCodeValidate errorValidate = new ErrorCodeValidate();
+            if(ObjectUtils.isEmpty(errorMessage)){
+                errorValidate.setErrorCode("SYSTEM_ERROR");
+                errorValidate.setErrorMessage("system error");
+            } else {
+                String[] codeAndMessage = errorMessage.split("\\|");
+                if(codeAndMessage.length == 2){
+                    errorValidate.setErrorCode(codeAndMessage[0]);
+                    errorValidate.setErrorMessage(codeAndMessage[1]);
+                } else {
+                    errorValidate.setErrorCode("SYSTEM_ERROR");
+                    errorValidate.setErrorMessage(codeAndMessage[0]);
+                }
+            }
+
+            errors.put(fieldName, errorValidate);
         });
-        ErrorResponseDataDTO<Map<String, String>> errorResponseDataDTO = new ErrorResponseDataDTO<>();
-        errorResponseDataDTO.setStatusCode(ResponseConstant.ResponseCode.INTERNAL_ERROR);
-        errorResponseDataDTO.setMessage(ex.getMessage());
+        ErrorResponseDataDTO<Map<String, ErrorCodeValidate>> errorResponseDataDTO = new ErrorResponseDataDTO<>();
+        if(!errors.isEmpty()){
+            Map.Entry<String, ErrorCodeValidate> entry = errors.entrySet().iterator().next();
+            errorResponseDataDTO.setErrorCode(entry.getValue().getErrorCode());
+            errorResponseDataDTO.setErrorMessage(entry.getValue().getErrorMessage());
+        } else {
+            errorResponseDataDTO.setErrorCode("SYSTEM_ERROR");
+            errorResponseDataDTO.setErrorMessage(ex.getMessage());
+
+        }
         errorResponseDataDTO.setErrorTime(LocalDateTime.now());
         errorResponseDataDTO.setApiPath(request.getDescription(false));
         errorResponseDataDTO.setRefNo(UUID.fromString(Objects.requireNonNull(SecurityUtil.getRefNo())));

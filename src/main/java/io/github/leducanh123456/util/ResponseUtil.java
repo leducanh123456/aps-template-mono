@@ -11,9 +11,9 @@ public class ResponseUtil {
     public static<T> ResponseDataDTO<T> ok(T t){
         ResponseDataDTO<T> dto = new ResponseDataDTO<T>();
         dto.setData(t);
-        dto.setMessage("ok");
+        dto.setErrorMessage("ok");
         dto.setRefNo(UUID.fromString(Objects.requireNonNull(SecurityUtil.getRefNo())));
-        dto.setStatusCode("00");
+        dto.setErrorCode("00");
         return dto;
     }
     public static ResponseDTO ok(){
